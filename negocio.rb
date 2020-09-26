@@ -1,13 +1,14 @@
 require "test/unit"
 
 class Ocurrencia
-  attr_reader :subtipo, :dia, :hora, :lugar, :descripcion 
-  def initialize(subtipo, dia, hora, lugar, descripcion )
+  attr_reader :subtipo, :dia, :hora, :lugar, :descripcion, :reportante
+  def initialize(subtipo, dia, hora, lugar, descripcion, reportante )
       @subtipo = subtipo
       @dia  = dia 
       @hora = hora
       @lugar = lugar
       @descripcion = descripcion
+      @reportante = reportante
   end
 
   def tipoOcurrencia
@@ -19,8 +20,8 @@ end
 
 
 class SeguridadPublica < Ocurrencia
-  def initialize(subtipo, dia, hora, lugar, descripcion)
-    super(subtipo, dia, hora, lugar, descripcion)
+  def initialize(subtipo, dia, hora, lugar, descripcion, reportante )
+    super(subtipo, dia, hora, lugar, descripcion, reportante)
   end
 
   def tipoOcurrencia
@@ -49,8 +50,8 @@ end
 
 class SeguridadVial < Ocurrencia
   attr_accessor :aplicaMulta
-  def initialize(subtipo, dia, hora, lugar, descripcion, aplicaMulta)
-    super(subtipo, dia, hora, lugar, descripcion)
+  def initialize(subtipo, dia, hora, lugar, descripcion, reportante, aplicaMulta)
+    super(subtipo, dia, hora, lugar, descripcion, reportante)
     @aplicaMulta = aplicaMulta
   end
 
@@ -89,13 +90,12 @@ class SeguridadVial < Ocurrencia
   def codigoImagen
      return indiceGravedad.to_s + "_" + hora.to_s + "-#{subtipo}" + "_#{dia}" + "_#{aplicarMulta}"
   end
-
   
 end
 
 class ApoyoTurista < Ocurrencia
-  def initialize(subtipo, dia, hora, lugar, descripcion)
-    super(subtipo, dia, hora, lugar, descripcion)
+  def initialize(subtipo, dia, hora, lugar, descripcion, reportante)
+    super(subtipo, dia, hora, lugar, descripcion, reportante)
   end
 
   def tipoOcurrencia
@@ -121,8 +121,8 @@ class ApoyoTurista < Ocurrencia
 end
 
 class OrdenPublico < Ocurrencia
-  def initialize(subtipo, dia, hora, lugar, descripcion)
-    super(subtipo, dia, hora, lugar, descripcion)
+  def initialize(subtipo, dia, hora, lugar, descripcion, reportante)
+    super(subtipo, dia, hora, lugar, descripcion, reportante)
   end
 
   def tipoOcurrencia
@@ -132,11 +132,11 @@ class OrdenPublico < Ocurrencia
   def indiceGravedad()
     case subtipo
     when "Discriminación"
-      indice = 2
+      indice = 6
     when "Escandalo Publica"
       indice = 4
     when "Consumo de Licor"
-      indice = 6
+      indice = 3
     when "Daño publico"
       indice = 5
     end
@@ -152,22 +152,28 @@ end
 class Operador
   attr_accessor  :arrOcurrencias 
   def initialize
-    # @nombres_operador = nombres_operador
     @arrOcurrencias = Array.new
+    @arrOperadores = ["Juan Jose", "Reportante 1", "Reportante 2", "Reportante 3"]
   end
 
   def registrarOcurrencia(ocurrencia)
-    @arrOcurrencias.push(ocurrencia)
+         @arrOcurrencias.push(ocurrencia)
   end
+
+  def validarOperador
+      for operador in @arrOperadores
+        if operador == "Juan Jose"
+          return "si"
+        end
+        raise "No esta"
+      end
+  end
+
 
   def mostrarOcurrecias
      for ocurrencia in arrOcurrencias
-        puts "------------"
-        puts ocurrencia.subtipo
-        puts ocurrencia.dia
-        puts ocurrencia.descripcion
-        puts ocurrencia.lugar
-        puts "Código de Imagen:  #{ocurrencia.codigoImagen}" 
+         puts "------------"
+         puts "Sub Tipo de ocurrencias: #{ocurrencia.subtipo} | Lugar: #{ocurrencia.lugar} | Descripción: #{ocurrencia.descripcion} |  Fecha: #{ocurrencia.dia} | Código de Imagen: #{ocurrencia.codigoImagen}"
      end
   end
 
@@ -200,13 +206,32 @@ class Operador
       return cantidad
   end
 
-  
-
-  def mostrarDatosTipo
-      
+  def incidenciasporTipo(tipo)
+      cantidad = 0
+      for ocurrencia in arrOcurrencias
+        if ocurrencia.tipoOcurrencia == tipo
+          puts "Sub Tipo de ocurrencias: #{ocurrencia.subtipo} | Lugar: #{ocurrencia.lugar} | Descripción: #{ocurrencia.descripcion} |  Fecha: #{ocurrencia.dia} | Código de Imagen: #{ocurrencia.codigoImagen}"
+        end
+      end
   end
 
+  def buscarOcurrenciasReportante(reportant)
+       for ocurrencia in arrOcurrencias
+          if ocurrencia.reportante == reportant
+            return ocurrencia
+          end
+        end
+        raise "No se encuentra"
+  end
 
+  # def mostrarDatosTipo   
+  #      for ocurrencia in arrOcurrencias
+  #       if ocurrencia.tipoOcurrencia == tipo
+  #         cantidad = cantidad + 1
+  #       end
+  #     end
+  #     return cantidad
+  # end
 
 
 end
@@ -235,13 +260,13 @@ class Factoria
   def self.create(tipo, *arg)
      case tipo
      when "SeguridadPublica"
-       return SeguridadPublica.new(arg[0], arg[1], arg[2], arg[3],arg[4])
+       return SeguridadPublica.new(arg[0], arg[1], arg[2], arg[3],arg[4], arg[5])
      when "OrdenPublico"
-       return OrdenPublico.new(arg[0], arg[1], arg[2], arg[3],arg[4])
+       return OrdenPublico.new(arg[0], arg[1], arg[2], arg[3],arg[4], arg[5])
      when "SeguridadVial"
-       return SeguridadVial.new(arg[0], arg[1], arg[2], arg[3],arg[4], arg[5])   
+       return SeguridadVial.new(arg[0], arg[1], arg[2], arg[3],arg[4],arg[5], arg[6])   
      when "ApoyoTurista"
-       return ApoyoTurista.new(arg[0], arg[1], arg[2], arg[3],arg[4]) 
+       return ApoyoTurista.new(arg[0], arg[1], arg[2], arg[3],arg[4],arg[5] ) 
      end
   end
 end
