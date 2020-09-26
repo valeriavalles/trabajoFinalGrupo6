@@ -115,7 +115,7 @@ class ApoyoTurista < Ocurrencia
   end
 
   def codigoImagen
-     return indiceGravedad.to_s + "_" + hora.to_s + "-#{subtipo}" + "_#{dia}"
+     return indiceGravedad.to_s + "_" + hora.to_s + "-#{subtipo}" + "_#{dia}-Turista" 
   end
 
 end
@@ -172,8 +172,9 @@ class Operador
 
   def mostrarOcurrecias
      for ocurrencia in arrOcurrencias
-         puts "------------"
-         puts "Sub Tipo de ocurrencias: #{ocurrencia.subtipo} | Lugar: #{ocurrencia.lugar} | Descripción: #{ocurrencia.descripcion} |  Fecha: #{ocurrencia.dia} | Código de Imagen: #{ocurrencia.codigoImagen}"
+         puts "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+         puts "SUB TIPO DE OCURRENCIA: #{ocurrencia.subtipo} | LUGAR: #{ocurrencia.lugar} | DESCRIPCIÓN: #{ocurrencia.descripcion} |  FECHA: #{ocurrencia.dia} | CÓDIGO DE IMAGEN: #{ocurrencia.codigoImagen} | REPORTANTE: #{ocurrencia.reportante}"
+         
      end
   end
 
@@ -210,7 +211,8 @@ class Operador
       cantidad = 0
       for ocurrencia in arrOcurrencias
         if ocurrencia.tipoOcurrencia == tipo
-          puts "Sub Tipo de ocurrencias: #{ocurrencia.subtipo} | Lugar: #{ocurrencia.lugar} | Descripción: #{ocurrencia.descripcion} |  Fecha: #{ocurrencia.dia} | Código de Imagen: #{ocurrencia.codigoImagen}"
+          puts "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+          puts "SUB TIPO DE OCURRENCIA: #{ocurrencia.subtipo} | LUGAR: #{ocurrencia.lugar} | DESCRIPCIÓN: #{ocurrencia.descripcion} |  FECHA: #{ocurrencia.dia} | CÓDIGO DE IMAGEN: #{ocurrencia.codigoImagen} | REPORTANTE: #{ocurrencia.reportante}"
         end
       end
   end
@@ -221,20 +223,11 @@ class Operador
             return ocurrencia
           end
         end
-        raise "No se encuentra"
+        raise "<<<<<<<< REPORTANTE NO SE ENCUENTRA REGISTRADO >>>>>>>>>>"
   end
 
-  # def mostrarDatosTipo   
-  #      for ocurrencia in arrOcurrencias
-  #       if ocurrencia.tipoOcurrencia == tipo
-  #         cantidad = cantidad + 1
-  #       end
-  #     end
-  #     return cantidad
-  # end
-
-
 end
+
 
 # class Supervisor 
 #   attr_accessor :arrOperadores
@@ -251,8 +244,6 @@ end
 #       puts operador.arrOperadores
 #     end
 #   end
-
-
 # end
 
 
